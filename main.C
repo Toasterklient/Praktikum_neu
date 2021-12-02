@@ -6,7 +6,6 @@
 // Description : Hello World in C, Ansi-style
 //============================================================================
 
-//Token: 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
 
 #include <string>
 #include <iostream>
