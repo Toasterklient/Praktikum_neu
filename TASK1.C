@@ -40,6 +40,7 @@ string BlackBoxUnsafe::input(string strPwd){
 	return string("ACCESS DENIED");
 }
 
+
 string BlackBoxUnsafe::randomPwd(int l){
 	int symbolIdx;
 	if(l < MINIMAL_PWD_LENGTH){ l = MINIMAL_PWD_LENGTH;};
@@ -50,6 +51,9 @@ string BlackBoxUnsafe::randomPwd(int l){
 	}
 	return pwd_;
 }
+
+
+
 
 void demoTASK1_00(){
 	string pwd("meinpassword");

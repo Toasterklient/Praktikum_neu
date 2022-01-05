@@ -104,8 +104,10 @@ protected:
 class BlackBoxSafe : public BlackBoxUnsafe{
 	/// \todo  Implementation of class BlackBoxSafe needs to be finalized.
 public:
-	BlackBoxSafe(int pwdLength, int symbSetSize) : BlackBoxUnsafe(pwdLength, symbSetSize){;};
+	BlackBoxSafe(int pwdLength, int symbSetSize) : BlackBoxUnsafe(pwdLength, symbSetSize){;}; //Aufruf Constructer Elternklasse
 	virtual string input(string strPwd){return string("undefined");};
+
+
 };
 
 
