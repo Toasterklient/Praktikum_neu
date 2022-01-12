@@ -82,15 +82,28 @@ string MyServer::myResponse(string input){
 	if(input.compare(0,6, "tryPwd") == 0){
 		if (bb_ == nullptr) return string ("Bitte erst  neues Passwort generieren.");
 
-		const char *tempPwdChr = input.c_str();
-		char pwdChr [input.size()];
+
+		const char *tmpPwdChr = input.c_str();  // Umwandlung string input in ein "array of char"
+		        char pwdChr[input.size()];                         // Anlegen eines weiteren "array of char" mit
+		                                                                               // der Laenge des String input
+		        for(int idx = 0; idx < input.size(); idx++){
+		            pwdChr[idx] = '\0';                                     // Initialisierung des arrays mit NULL-Zeichen
+		        }                                                                        // Dieses NULL-Zeichen ist das Terminierungszeichen
+		                                                                                  // fuer Zeichenketten (arrays of char) in C und C++
+
+		        for(int idx = 7; idx < input.size(); idx++){
+		            if(tmpPwdChr[idx] == ')') { break;};         // Kopiere alle Zeichen des arrays tmpPwdChr ab
+		            pwdChr[idx-7] = tmpPwdChr[idx];         // Index 7 in das Array pwdChr ab Index 0.
+		        }                                                                       // Falls das im Feld tmpPwdChr das Zeichen
+		                                                                                 // ')' gelesen wird, wird der Kopiervorgang durch
+		                                                                                 // Verlassen der Schleife abgebrochen
+
+		        string pwd =  string(pwdChr);
 
 
-		sscanf(tempPwdChr, "trypwd(%s), pwdChr");
+		cout <<"#"<< pwd <<"#\n";
 
-		cout <<"#"<< string(pwdChr) <<"#\n";
-
-		return  (bb_-> input(string (tempPwdChr)));
+		return  (bb_-> input(pwd));
 
 	};
 
