@@ -24,7 +24,17 @@
 
 using namespace std;
 
+class MyBlackBoxSafe : public TASK1::BlackBoxSafe{
+public:
+	MyBlackBoxSafe(int pwdLength, int symbSetSize) : TASK1::BlackBoxSafe(pwdLength, symbSetSize){;};
+	virtual string input(string strPwd);//{return string("undefined");};
 
+
+protected:
+	string randomPwd (int l);
+	string pwd_;
+
+};
 
 class MyServer : public TCPserver {
 public:
@@ -33,21 +43,12 @@ public:
 
 protected:
 	string myResponse(string input); //deklaration
+	MyBlackBoxSafe *bb_ = nullptr;
 
 
 };
 
-class MyBlackBoxSafe : public TASK1::BlackBoxSafe{
-public:
-	MyBlackBoxSafe(int pwdLength, int symbSetSize) : TASK1::BlackBoxSafe(pwdLength, symbSetSize){;};
-	virtual string input(string strPwd){return string("undefined");};
 
-
-protected:
-	string randomPwd (int l);
-	string pwd_;
-
-};
 
 
 int main(){
@@ -59,31 +60,41 @@ int main(){
 
 
 string MyServer::myResponse(string input){
-	int lPwd[2];
-	int zPwd[2];
-	char tPwd [50];
-	char newPwd [50];
+	if(input.compare(0,6, "newPwd" )== 0){
+			int pwdLeng = 3;
+			int alphabetLeng = 5;
+			int res;
 
-	if (input.compare(0,10, "getSymbols") == 0){
+			res = sscanf(input.c_str(), "newPwd(%i,%i)", &pwdLeng, &alphabetLeng);
+			if (res !=2)return string ("ERROR");
+			if (pwdLeng < 3) return string ("Passwortlaenge zu gering.");
+			if (alphabetLeng < 2) return string ("Alphabetlaenge zu gering.");
 
-		return string("ABCDEFGHIJKLMNOPQRTSTUVWXYZabcdefghijklmopqrstuvwxyz0123456789");
-	}else if(input.compare(0,6, "newPwd" )== 0){
-		//newPwd(int,int), länge und anzahl der verwendeten zeichen
-		//fgets()
-			//printf("%i,%i", lPwd, zPwd);
-
-			//if(res !=2) return ("ERROR");
+			if (bb_ == nullptr){
+				bb_ = new MyBlackBoxSafe(pwdLeng, alphabetLeng);
+			}else{
+				delete bb_;
+				bb_ = new MyBlackBoxSafe(pwdLeng, alphabetLeng);
+			}
 			return string("OK");
-	}else if(input.compare(0,6, "tryPwd") == 0){
+	};
 
-		/*sscanf("tryPwd(%49s)", &tPwd[0]);
-			if(tPwd ==newPwd) return ("Richtig");*/
+	if(input.compare(0,6, "tryPwd") == 0){
+		if (bb_ == nullptr) return string ("Bitte erst  neues Passwort generieren.");
 
-		return string("OK");
+		const char *tempPwdChr = input.c_str();
+		char pwdChr [input.size()];
 
-	}else{
-		return string ("ERROR");
-	}
+
+		sscanf(tempPwdChr, "trypwd(%s), pwdChr");
+
+		cout <<"#"<< string(pwdChr) <<"#\n";
+
+		return  (bb_-> input(string (tempPwdChr)));
+
+	};
+
+	return string ("ERROR");
 
 }
 
@@ -101,5 +112,10 @@ string MyBlackBoxSafe::randomPwd (int l){
 }
 
 
-
+string MyBlackBoxSafe::input(string strPwd){
+	if(sha256(strPwd).compare(pwd_) == 0){
+		return string("ACCESS ACCEPTED");
+	}
+	return string("ACCESS DENIED");
+}
 
