@@ -68,10 +68,10 @@ int main(int argc, char * argv[]) {
     cout << "Passwortlaenge: " << pwdL << " | Alphabetlaenge: "  << alphaL << " | Versuche: " << runs << endl;
 
     for (int i = 0; i<runs; i ++){
-
     	send = string ("newPwd");
+    	send =
     	cout << "client sends:" << send << endl;
-    	//recive = myResponse(send);
+    	recive = myResponse(send);
     }
 
 
