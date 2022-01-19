@@ -26,13 +26,14 @@ using namespace std;
 
 class MyBlackBoxSafe : public TASK1::BlackBoxSafe{
 public:
-	MyBlackBoxSafe(int pwdLength, int symbSetSize) : TASK1::BlackBoxSafe(pwdLength, symbSetSize){;};
-	virtual string input(string strPwd);//{return string("undefined");};
+	MyBlackBoxSafe(int pwdLength, int symbSetSize) : TASK1::BlackBoxSafe(pwdLength, symbSetSize){
+		pwd_ = sha256(pwd_);
+	};
+	virtual string input(string strPwd);
 
 
 protected:
 	string randomPwd (int l);
-	string pwd_;
 
 };
 
@@ -61,20 +62,20 @@ int main(){
 
 string MyServer::myResponse(string input){
 	if(input.compare(0,6, "newPwd" )== 0){
-			int pwdLeng = 3;
-			int alphabetLeng = 5;
+			int pwdL = 3;
+			int alphaL = 5;
 			int res;
 
-			res = sscanf(input.c_str(), "newPwd(%i,%i)", &pwdLeng, &alphabetLeng);
+			res = sscanf(input.c_str(), "newPwd(%i,%i)", &pwdL, &alphaL);
 			if (res !=2)return string ("ERROR");
-			if (pwdLeng < 3) return string ("Passwortlaenge zu gering.");
-			if (alphabetLeng < 2) return string ("Alphabetlaenge zu gering.");
+			if (pwdL < 3) return string ("Passwortlaenge zu gering.");
+			if (alphaL < 2) return string ("Alphabetlaenge zu gering.");
 
 			if (bb_ == nullptr){
-				bb_ = new MyBlackBoxSafe(pwdLeng, alphabetLeng);
+				bb_ = new MyBlackBoxSafe(pwdL, alphaL);
 			}else{
 				delete bb_;
-				bb_ = new MyBlackBoxSafe(pwdLeng, alphabetLeng);
+				bb_ = new MyBlackBoxSafe(pwdL, alphaL);
 			}
 			return string("OK");
 	};
@@ -109,19 +110,6 @@ string MyServer::myResponse(string input){
 
 	return string ("ERROR");
 
-}
-
-
-//BlackBoxSave
-string MyBlackBoxSafe::randomPwd (int l){
-	int symbolIdx;
-		if(l < TASK1::MINIMAL_PWD_LENGTH){ l = TASK1::MINIMAL_PWD_LENGTH;};
-		pwd_ = string("");
-		for(int i=0; i < l; i++){
-			symbolIdx = rand() % lengthSymbArray_;
-			pwd_ +=  charSymbArray_[symbolIdx];
-		}
-		return sha256(pwd_);
 }
 
 
