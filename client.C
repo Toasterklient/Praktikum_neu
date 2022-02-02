@@ -17,33 +17,6 @@ using namespace std;
 
 string randomPwd(int pwdL, int alphaL);
 
-/*int main() {
-	srand(time(NULL));
-	TCPclient c;
-	string host = "localhost";
-	string msg;
-
-	//connect to host
-	c.conn(host , 2023);
-
-	int i=0;
-	bool goOn=1;
-	while(goOn){ // send and receive data
-		if((rand() % 20) < i++){
-			msg = string("tryPwd");
-			goOn = 0;
-		}else{
-			msg = string("newPwd(4,6)");
-		}
-		cout << "client sends:" << msg << endl;
-		c.sendData(msg);
-		msg = c.receive(32);
-		cout << "got response:" << msg << endl;
-		sleep(1);
-
-	}
-}*/
-
 string myResponse(string input);
 
 int main(int argc, char * argv[]) {
@@ -70,6 +43,8 @@ int main(int argc, char * argv[]) {
         return 0;
     }
 
+
+
     // Passwordlaenge
     sscanf(argv[1],"%i",&pwdL);
     //Alphabetlaenge
@@ -77,7 +52,22 @@ int main(int argc, char * argv[]) {
     // read anzahl laeufe
     sscanf(argv[3],"%i",&runs);
 
+
+    //überprüfung der Passwortparameter
+    if (pwdL < 3){   //Passwortlaenge
+    	cout << "Passwortlaenge ist zu gering mind. 3 erforderlich" << endl;
+        return 0;
+    }
+
+    if (alphaL < 2){   //Alphabetlaenge
+        cout << "Alphabetlaenge zu gering, mind. 2 erforderlich" << endl;
+        return 0;
+    }
+
+    //Ausgabe der Passwort-,Alphabetlaenge und der Anzahl der Versuche
     cout << "Passwortlaenge: " << pwdL << " | Alphabetlaenge: "  << alphaL << " | Versuche: " << runs << endl;
+
+
 
     stringstream ss1;
     ss1<< "newPwd(" << pwdL << "," << alphaL << ")" << "\n";

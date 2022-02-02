@@ -24,6 +24,15 @@
 
 using namespace std;
 
+/**
+ *
+ * \class MyBlackBoxSafe
+ *
+ * \brief Implements a safe password checker where the
+ * password is stored as hash value.
+ *
+ */
+
 class MyBlackBoxSafe : public TASK1::BlackBoxSafe{
 public:
 	MyBlackBoxSafe(int pwdLength, int symbSetSize) : TASK1::BlackBoxSafe(pwdLength, symbSetSize){
@@ -36,6 +45,13 @@ protected:
 	string randomPwd (int l);
 
 };
+
+/**
+ *
+ *  \class MyServer
+ *  \brief     The class defining of a TCP/IP server for generating and saving the password.
+ *
+ */
 
 class MyServer : public TCPserver {
 public:
@@ -67,9 +83,6 @@ string MyServer::myResponse(string input){
 			int res;
 
 			res = sscanf(input.c_str(), "newPwd(%i,%i)", &pwdL, &alphaL);
-			if (res !=2)return string ("ERROR");
-			if (pwdL < 3) return string ("Passwortlaenge zu gering.");
-			if (alphaL < 2) return string ("Alphabetlaenge zu gering.");
 
 			if (bb_ == nullptr){
 				bb_ = new MyBlackBoxSafe(pwdL, alphaL);
